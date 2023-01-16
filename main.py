@@ -1,5 +1,5 @@
 import cv2
-import Rpi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 from flask import Flask, render_template, Response
 
