@@ -46,7 +46,7 @@ def gen():
         face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
         face = face_cascade.detectMultiScale(img, scaleFactor=1.2, minNeighbors=4)
         
-        for (x, y, w, h) in face
+        for (x, y, w, h) in face:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 5)
             cv2.circle(img, (x+w/2, y+h/2), 5, (255, 0, 255), 5)
             
