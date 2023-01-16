@@ -9,8 +9,9 @@ Arm = 13
 camera = cv2.VideoCapture(0)
 app = Flask(__name__)
 
-GPIO.cleanup()
+
 GPIO.setwarnings(False)
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(Base, GPIO.OUT)
