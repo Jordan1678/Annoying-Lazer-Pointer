@@ -1,12 +1,28 @@
 import cv2
-
+import Rpi.GPIO as GPIO
 
 from flask import Flask, render_template, Response
 
+Base = 12
+Arm = 13
 
 camera = cv2.VideoCapture(0)
 app = Flask(__name__)
 
+GPIO.cleanup()
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(Base, GPIO.OUT)
+GPIO.setup(Arm, GPIO.OUT)
+
+BasePWM = GPIO.PWM(Base, 50)
+ArmPWM = GPIO.PWM(Arm, 50)
+BasePWM.start(0)
+ArmPWM.start(0)
+
+def map(x, in_min, in_max, out_min, out_max):
+    return int((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 @app.route('/')
 def index():
@@ -18,10 +34,6 @@ def gen():
     # get camera
     cap = cv2.VideoCapture(0)
 
-    # horizontal/vertical resolution cap for a raspberry pi I suggest
-    # 480p over 720p because the raspberry pi 3 b+ (The one I'm using)
-    # doesn't have enough compute power to render frames at a steady
-    # frame rate
     cap.set(3, 640)  # vertical cap
     cap.set(4, 480)  # horizontal cap
 
@@ -30,8 +42,19 @@ def gen():
 
         # Capture frame-by-frame
         ret, img = cap.read()
-
-        # this is where if you want to draw on frames you add that here
+        
+        face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+        face = face_cascade.detectMultiScale(img, scaleFactor=1.2, minNeighbors=4)
+        
+        for (x, y, w, h) in face
+            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 5)
+            cv2.circle(img, (x+w/2, y+h/2), 5, (255, 0, 255), 5)
+            
+            BaseTarget = map(x + w/2, 0, 640, 90+45, 90-45)
+            ArmTarget = map(y + h/2, 0, 480, 90-32, 90+32)
+            
+            print(f"Face Found @ {BaseTarget}x {ArmTarget}y"))
+            
         if ret == True:
             img = cv2.resize(img, (0, 0), fx=1, fy=1)
             
