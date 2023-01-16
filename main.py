@@ -53,7 +53,7 @@ def gen():
             BaseTarget = map(x + w/2, 0, 640, 90+45, 90-45)
             ArmTarget = map(y + h/2, 0, 480, 90-32, 90+32)
             
-            print(f"Face Found @ {BaseTarget}x {ArmTarget}y"))
+            print(f"Face Found @ {BaseTarget}x {ArmTarget}y")
             
         if ret == True:
             img = cv2.resize(img, (0, 0), fx=1, fy=1)
