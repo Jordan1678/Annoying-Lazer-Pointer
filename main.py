@@ -49,11 +49,13 @@ def gen():
         
         for (x, y, w, h) in face:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 5)
-            cv2.circle(img, (x+w/2, y+h/2), 5, (255, 0, 255), 5)
+            cv2.circle(img, (int(x+w/2), int(y+h/2)), 5, (255, 0, 255), 5)
             
             BaseTarget = map(x + w/2, 0, 640, 90+45, 90-45)
             ArmTarget = map(y + h/2, 0, 480, 90-32, 90+32)
             
+            BasePWM.ChangeDutyCycle(BaseTarget/18 + 2)
+            ArmPWM.ChangeDutyCycle(ArmPWM/18 + 2)
             print(f"Face Found @ {BaseTarget}x {ArmTarget}y")
             
         if ret == True:
